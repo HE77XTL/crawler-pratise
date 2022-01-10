@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+  <properties resource="db.properties"/>
+
+  <settings>
+    <setting name="mapUnderscoreToCamelCase" value="true"/>
+  </settings>
+  <typeAliases>
+    <typeAlias alias="Link" type="com.github.hextl.Link"/>
+  </typeAliases>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="jdbc:mysql://101.43.38.193:3306/crawler-news?useUnicode=true&amp;characterEncoding=utf-8"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <mapper resource="myMapper.xml"/>
+    </mappers>
+</configuration>

@@ -24,3 +24,5 @@ hs_err_pid*
 
 .idea
 crawler-pritise.iml
+target
+src/main/resources/db.properties
