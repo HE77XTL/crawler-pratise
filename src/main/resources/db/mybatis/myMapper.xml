@@ -7,4 +7,10 @@
     select url
     from LINK
   </select>
+  <insert id="insertIntoLINK" parameterType="Link">
+    insert into LINK
+      (url, status, create_time, modify_time)
+    values (#{url}, 0, now(), now())
+  </insert>
 </mapper>
+
