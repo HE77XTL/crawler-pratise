@@ -84,6 +84,17 @@
           </dependency>
         </dependencies>
       </plugin>
+      <plugin>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-maven-plugin</artifactId>
+        <version>6.1.0</version>
+        <configuration>
+          <url>jdbc:mysql://localhost:3306/crawlernews?useUnicode=true&amp;characterEncoding=utf-8&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC</url>
+          <user>root</user>
+          <password>password</password>
+          <baselineOnMigrate>true</baselineOnMigrate>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>
