@@ -3,14 +3,40 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.github.hextl.myMapper">
+
+  <!--  link-->
+
   <select id="selectLink" resultType="String">
     select url
     from LINK
+    where url = (#{url})
+  </select>
+  <select id="getToBeProcessedLink" resultType="Link">
+    select url, id
+    from LINK
+    where status = 0
+    limit 1
   </select>
   <insert id="insertIntoLINK" parameterType="Link">
     insert into LINK
       (url, status, create_time, modify_time)
-    values (#{url}, 0, now(), now())
+    values (#{url}, #{status}, now(), now())
   </insert>
+  <update id="updateLinkStatus" parameterType="Link">
+    update LINK
+    set status = (#{status})
+    where id = (#{id})
+  </update>
+
+
+  <!--  news-->
+
+  <insert id="insertArticleToNews" parameterType="News">
+    insert into NEWS
+      (url, title, content, create_time, modify_time)
+    values (#{url}, #{title}, #{content}, now(), now())
+  </insert>
+
+
 </mapper>
 

@@ -3,10 +3,19 @@ package com.github.hextl.entity;
 import java.time.Instant;
 
 public class Link {
+    Integer id;
     String url;
     Integer status;
     Instant create_time;
     Instant modify_time;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getUrl() {
         return url;
