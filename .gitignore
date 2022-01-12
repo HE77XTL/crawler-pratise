@@ -26,3 +26,5 @@ hs_err_pid*
 crawler-pritise.iml
 target
 src/main/resources/db.properties
+/src/main/resources/db/db.properties
+/src/main/resources/db/flyway.properties
