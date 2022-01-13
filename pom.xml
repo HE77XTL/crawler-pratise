@@ -101,7 +101,7 @@
         <configuration>
           <url>jdbc:mysql://localhost:3306/crawlernews?useUnicode=true&amp;characterEncoding=utf-8&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC</url>
           <user>root</user>
-          <password>password</password>
+          <password>he20190109</password>
           <baselineOnMigrate>true</baselineOnMigrate>
         </configuration>
       </plugin>

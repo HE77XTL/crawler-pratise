@@ -9,6 +9,16 @@ public class Link {
     Instant create_time;
     Instant modify_time;
 
+    public Link(Integer id, int status) {
+        this.id = id;
+        this.status = status;
+    }
+
+    public Link(String url, int status) {
+        this.url = url;
+        this.status = status;
+    }
+
     public Integer getId() {
         return id;
     }
