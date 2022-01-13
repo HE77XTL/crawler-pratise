@@ -6,9 +6,11 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
 
 public class JdbcCrawlerDao {
@@ -26,31 +28,44 @@ public class JdbcCrawlerDao {
     }
 
     public List<Link> getToBeProcessedLink() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        return sqlSession.selectList("getToBeProcessedLink");
-    };
-    public List<Link> selectLinkByUrl(String url) {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        return sqlSession.selectList("selectLinkByUrl", url);
-    };
+        List<Link> links;
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            links = sqlSession.selectList("getToBeProcessedLink");
+        }
 
-    public void updateLinkStatus(Link link) {
-        SqlSession sqlSession = sqlSessionFactory.openSession(true);
-        sqlSession.update("updateLinkStatus", link);
+        return links;
     }
 
-    public void insertIntoLINK(Link link) {
-        SqlSession sqlSession = sqlSessionFactory.openSession(true);
-        sqlSession.insert("insertIntoLINK", link);
+    ;
+
+    public List<Link> selectLinkByUrl(String url) {
+        List<Link> links;
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            links = sqlSession.selectList("selectLinkByUrl", url);
+        }
+
+        return links;
+    }
+
+    ;
+
+    public void updateLinkStatus(HashMap link) {
+        try(SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
+            sqlSession.update("updateLinkStatus", link);
+        }
+    }
+
+    public void insertIntoLINK(HashMap link) {
+        try(SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
+            sqlSession.insert("insertIntoLINK", link);
+        }
+
     }
 
     public void insertArticleToNews(News news) {
-        SqlSession sqlSession = sqlSessionFactory.openSession(true);
-        sqlSession.insert("insertArticleToNews", news);
+        try(SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
+            sqlSession.insert("insertArticleToNews", news);
+        }
     }
-
-
-
-
 
 }

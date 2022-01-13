@@ -35,7 +35,10 @@ public class SinaCrawler {
 
     public void run() throws IOException {
         PageData pageData = getPageDataByUrl("https://sina.cn");
-        dao.updateLinkStatus(new Link(1, 1));
+        HashMap<String, Object> updateLinkMap = new HashMap();
+        updateLinkMap.put("id", 1);
+        updateLinkMap.put("status", 1);
+        dao.updateLinkStatus(updateLinkMap);
         List<String> aLinks = pageData.getHrefList();
         saveLinks(aLinks);
         saveNews("https://sina.cn", pageData.getTitle(), pageData.getContent());
@@ -46,21 +49,23 @@ public class SinaCrawler {
             Link nextLink = nextLinkList.get(0);
             String url = nextLink.getUrl();
             Integer id = nextLink.getId();
+            PageData nextPageData = getPageDataByUrl(url);
 
             System.out.println("url" + url);
-            System.out.println("title" + pageData.getTitle());
+            System.out.println("title" + nextPageData.getTitle());
+            System.out.println("title" + nextPageData.getContent());
 
-
-            PageData nextPageData = getPageDataByUrl(url);
-            dao.updateLinkStatus(new Link(id, 1));
+            HashMap<String, Object> nextUpdateLinkMap = new HashMap();
+            nextUpdateLinkMap.put("id", id);
+            nextUpdateLinkMap.put("status", 1);
+            dao.updateLinkStatus(nextUpdateLinkMap);
             List<String> nextALinks = nextPageData.getHrefList();
             saveLinks(nextALinks);
-            saveNews(url, pageData.getTitle(), pageData.getContent());
+            saveNews(url, nextPageData.getTitle(), nextPageData.getContent());
         }
     }
 
     public Document getDocumentByUrl(String url) throws IOException {
-        System.out.println(url);
         RequestConfig defaultRequestConfig = RequestConfig.custom()
                 .setSocketTimeout(10000)
                 .setConnectTimeout(5000)
@@ -79,8 +84,6 @@ public class SinaCrawler {
         InputStream inputStream = httpGetResponseEntity.getContent();
         String html = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
 
-        System.out.println("html:" + html);
-
         return Jsoup.parse(html);
     }
 
@@ -94,11 +97,7 @@ public class SinaCrawler {
         String content = document.select("section").select("p").text();
 
         for (Element aTag : aTagList) {
-
             String href = aTag.attr("href");
-
-            System.out.println("href = " + href);
-
             if (href.startsWith("//")) {
                 href = "http:" + href;
             }
@@ -120,7 +119,10 @@ public class SinaCrawler {
             if (isExist) {
                 continue;
             }
-            dao.insertIntoLINK(new Link(url, 0));
+            HashMap<String, Object> insertLinkMap = new HashMap();
+            insertLinkMap.put("url", url);
+            insertLinkMap.put("status", 0);
+            dao.insertIntoLINK(insertLinkMap);
         }
     }
 
