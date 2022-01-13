@@ -6,7 +6,7 @@
 
   <!--  link-->
 
-  <select id="selectLink" resultType="String">
+  <select id="selectLinkByUrl" resultType="String">
     select url
     from LINK
     where url = (#{url})
