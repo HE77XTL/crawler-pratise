@@ -37,6 +37,11 @@
     values (#{url}, #{title}, #{content}, now(), now())
   </insert>
 
+  <select id="selectNewFromNews" parameterType="int" resultType="News">
+    select url, title, content, create_time, modify_time
+    from NEWS
+  </select>
+
 
 </mapper>
 
