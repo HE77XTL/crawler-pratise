@@ -11,15 +11,24 @@ import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import java.beans.Encoder;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +42,7 @@ public class SinaCrawler {
     }
 
 
-    public void run() throws IOException {
+    public void run() throws IOException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
         PageData pageData = getPageDataByUrl("https://sina.cn");
         HashMap<String, Object> updateLinkMap = new HashMap();
         updateLinkMap.put("id", 1);
@@ -65,7 +74,10 @@ public class SinaCrawler {
         }
     }
 
-    public Document getDocumentByUrl(String url) throws IOException {
+    public Document getDocumentByUrl(String url) throws IOException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+        SSLConnectionSocketFactory scsf = new SSLConnectionSocketFactory(
+                SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build(),
+                NoopHostnameVerifier.INSTANCE);
         RequestConfig defaultRequestConfig = RequestConfig.custom()
                 .setSocketTimeout(10000)
                 .setConnectTimeout(5000)
@@ -74,6 +86,7 @@ public class SinaCrawler {
                 .build();
 
         CloseableHttpClient httpclient = HttpClients.custom()
+                .setSSLSocketFactory(scsf)
                 .setDefaultRequestConfig(defaultRequestConfig)
                 .build();
 
@@ -88,7 +101,7 @@ public class SinaCrawler {
     }
 
 
-    public PageData getPageDataByUrl(String url) throws IOException {
+    public PageData getPageDataByUrl(String url) throws IOException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
 
         List<String> pageALink = new ArrayList<>();
         Document document = getDocumentByUrl(url);
@@ -105,7 +118,6 @@ public class SinaCrawler {
             if (href.contains("reload=sina")) {
                 continue;
             }
-
             if (href.contains("sina.cn") && href.length() < 990) {
                 pageALink.add(href);
             }
