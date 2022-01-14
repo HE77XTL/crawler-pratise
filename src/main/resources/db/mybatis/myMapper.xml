@@ -11,7 +11,7 @@
     from LINK
     where url = (#{url})
   </select>
-  <select id="getToBeProcessedLink" resultType="Link">
+  <select id="getToBeProcessedLinkAndUpdateStatus" resultType="Link">
     select url, id
     from LINK
     where status = 0

@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class SinaCrawler {
+public class SinaCrawler extends Thread{
     private JdbcCrawlerDao dao;
 
     public SinaCrawler(JdbcCrawlerDao dao) {
@@ -42,36 +42,41 @@ public class SinaCrawler {
     }
 
 
-    public void run() throws IOException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
-        PageData pageData = getPageDataByUrl("https://sina.cn");
-        HashMap<String, Object> updateLinkMap = new HashMap();
-        updateLinkMap.put("id", 1);
-        updateLinkMap.put("status", 1);
-        dao.updateLinkStatus(updateLinkMap);
-        List<String> aLinks = pageData.getHrefList();
-        saveLinks(aLinks);
-        saveNews("https://sina.cn", pageData.getTitle(), pageData.getContent());
-
+    @Override
+    public void run()  {
         List<Link> nextLinkList;
 
-        while ((nextLinkList = dao.getToBeProcessedLink()).size() > 0) {
+        while ((nextLinkList = dao.getToBeProcessedLinkAndUpdateStatus()).size() > 0) {
             Link nextLink = nextLinkList.get(0);
             String url = nextLink.getUrl();
             Integer id = nextLink.getId();
-            PageData nextPageData = getPageDataByUrl(url);
 
-            System.out.println("url" + url);
-            System.out.println("title" + nextPageData.getTitle());
-            System.out.println("title" + nextPageData.getContent());
-
-            HashMap<String, Object> nextUpdateLinkMap = new HashMap();
-            nextUpdateLinkMap.put("id", id);
-            nextUpdateLinkMap.put("status", 1);
-            dao.updateLinkStatus(nextUpdateLinkMap);
-            List<String> nextALinks = nextPageData.getHrefList();
-            saveLinks(nextALinks);
-            saveNews(url, nextPageData.getTitle(), nextPageData.getContent());
+            try {
+                linkHandleProcess(url, id);
+            } catch (KeyManagementException e) {
+                e.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (KeyStoreException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }finally {
+                continue;
+            }
         }
+    }
+
+    public void linkHandleProcess(String  url, Integer id) throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException, IOException {
+        PageData pageData = null;
+        pageData = getPageDataByUrl(url);
+        System.out.println("id = " + id);
+        System.out.println("url = " + url);
+        System.out.println("title = " + pageData.getTitle());
+
+        List<String> aLinks = pageData.getHrefList();
+        saveLinks(aLinks);
+        saveNews(url, pageData.getTitle(), pageData.getContent());
     }
 
     public Document getDocumentByUrl(String url) throws IOException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
@@ -79,9 +84,9 @@ public class SinaCrawler {
                 SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build(),
                 NoopHostnameVerifier.INSTANCE);
         RequestConfig defaultRequestConfig = RequestConfig.custom()
-                .setSocketTimeout(10000)
-                .setConnectTimeout(5000)
-                .setConnectionRequestTimeout(5000)
+                .setSocketTimeout(3000)
+                .setConnectTimeout(3000)
+                .setConnectionRequestTimeout(3000)
                 .setCookieSpec(CookieSpecs.STANDARD_STRICT)
                 .build();
 
@@ -125,7 +130,7 @@ public class SinaCrawler {
         return new PageData(pageALink, title, content);
     }
 
-    public void saveLinks(List<String> linkList) {
+    public void  saveLinks(List<String> linkList) {
         for (String url : linkList) {
             Boolean isExist = dao.selectLinkByUrl(url).size() > 0;
             if (isExist) {
@@ -139,7 +144,7 @@ public class SinaCrawler {
     }
 
     public void saveNews(String url, String title, String content) {
-        if (!title.isEmpty() && !content.isEmpty()) {
+        if (!title.isEmpty() && !content.isEmpty() && content.length() < 99999) {
             News news = new News(url, title, content, Instant.now(), Instant.now());
             dao.insertArticleToNews(news);
         }
