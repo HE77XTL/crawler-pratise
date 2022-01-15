@@ -27,10 +27,16 @@ public class JdbcCrawlerDao {
         sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
     }
 
-    public List<Link> getToBeProcessedLink() {
+    public synchronized List<Link> getToBeProcessedLinkAndUpdateStatus() {
         List<Link> links;
-        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-            links = sqlSession.selectList("getToBeProcessedLink");
+        try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
+            links = sqlSession.selectList("getToBeProcessedLinkAndUpdateStatus");
+            if(links.size() > 0) {
+                HashMap<String, Object> updateLinkMap = new HashMap();
+                updateLinkMap.put("id", links.get(0).getId());
+                updateLinkMap.put("status", 1);
+                sqlSession.update("updateLinkStatus", updateLinkMap);
+            }
         }
 
         return links;
@@ -45,14 +51,6 @@ public class JdbcCrawlerDao {
         }
 
         return links;
-    }
-
-    ;
-
-    public void updateLinkStatus(HashMap link) {
-        try(SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
-            sqlSession.update("updateLinkStatus", link);
-        }
     }
 
     public void insertIntoLINK(HashMap link) {

@@ -11,7 +11,7 @@
     from LINK
     where url = (#{url})
   </select>
-  <select id="getToBeProcessedLink" resultType="Link">
+  <select id="getToBeProcessedLinkAndUpdateStatus" resultType="Link">
     select url, id
     from LINK
     where status = 0
@@ -36,6 +36,16 @@
       (url, title, content, create_time, modify_time)
     values (#{url}, #{title}, #{content}, now(), now())
   </insert>
+
+  <select id="selectNewFromNews" resultType="News">
+    select url, title, content, create_time, modify_time
+    from NEWS  limit #{page},10
+  </select>
+
+
+  <select id="selectNewCount" resultType="Total">
+    select count(*) as total from NEWS
+  </select>
 
 
 </mapper>

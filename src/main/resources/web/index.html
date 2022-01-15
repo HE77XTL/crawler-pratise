@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>新浪新闻</title>
+    <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+<header>
+    <h3>新闻搜索</h3>
+    <div class="searchInput">
+        <div class="searchToggle">
+            <div class="searchType active">标题</div>
+            <div class="searchType">内容</div>
+        </div>
+        <div>
+            <input type="text" class="commonInput">
+        </div>
+        <button class="searchBtn" onclick="onSearch()">搜索</button>
+    </div>
+</header>
+<main>
+    <div class="lazyLoadingWrap">
+        <div class="newsList">
+            <div class="newsRows">
+                <h4>title</h4>
+                <p>content</p>
+            </div>
+            <div class="newsRows">
+                <h4>title</h4>
+                <p>content</p>
+            </div>
+            <div class="newsRows">
+                <h4>title</h4>
+                <p>content</p>
+            </div>
+        </div>
+        <div class="lazyLoadingIcon">
+
+        </div>
+    </div>
+
+</main>
+<footer>
+    <p>数据来源于新浪新闻</p>
+</footer>
+</body>
+<script src="./index.js?456"></script>
+</html>

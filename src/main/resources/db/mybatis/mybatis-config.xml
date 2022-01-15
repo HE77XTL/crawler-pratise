@@ -11,6 +11,7 @@
   <typeAliases>
     <typeAlias alias="Link" type="com.github.hextl.entity.Link"/>
     <typeAlias alias="News" type="com.github.hextl.entity.News"/>
+    <typeAlias alias="Total" type="com.github.hextl.entity.Total"/>
   </typeAliases>
     <environments default="development">
         <environment id="development">

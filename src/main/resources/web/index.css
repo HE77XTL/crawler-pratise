@@ -1,0 +1,77 @@
+:root {
+    --mainFontSize: 14px;
+    --mainFontColor: #2c3e50;
+    --mainBg: #ecf0f1;
+    --mainWhihte: #ecf0f1;
+    --mainBorder: #bdc3c7;
+    --mainBorderRadduis: 4px;
+    --mainHighlight: #e67e22;
+
+
+    --commonInputHeight: 32px;
+    --commonInputPadding: 4px;
+
+}
+
+body {
+    color: var(--mainFontColor);
+    background: white;
+}
+
+.commonInput {
+    height: var(--commonInputHeight);
+    line-height: var(--commonInputHeight);
+    padding: 4px 6px;
+    border: 1px solid var(--mainBorder, #d0d0d5);
+    border-radius: var(--mainBorderRadduis, 4px);
+    background-color: #fff;
+    box-sizing: border-box;
+    font-size: var(--mainFontSize);
+    outline: none;
+    color: var(--mainFontColor, #4c5161);
+
+}
+
+
+.searchInput {
+    display: flex;
+    align-items: center;
+}
+
+.searchToggle {
+    display: flex;
+    align-items: center;
+    margin-right: 8px;
+}
+.searchToggle .searchType {
+    position: relative;
+}
+.searchToggle .searchType.active {
+    color: var(--mainHighlight);
+}
+
+.searchToggle .searchType:first-of-type {
+    margin-right: 16px;
+}
+.searchToggle .searchType:first-of-type:before {
+    display: block;
+    position: absolute;
+    content: "";
+    width: 1px;
+    top: 0;
+    bottom: 0;
+    right: -8px;
+    background: var(--mainBorder);
+    transform: rotate(22deg);
+}
+
+.searchBtn {
+    margin-left: 6px;
+    background: var(--mainHighlight);
+    border: none;
+    color: white;
+    padding: 6px 8px;
+    border-radius: var(--mainBorderRadduis);
+
+
+}
