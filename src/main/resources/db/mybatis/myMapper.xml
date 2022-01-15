@@ -37,9 +37,14 @@
     values (#{url}, #{title}, #{content}, now(), now())
   </insert>
 
-  <select id="selectNewFromNews" parameterType="int" resultType="News">
+  <select id="selectNewFromNews" resultType="News">
     select url, title, content, create_time, modify_time
-    from NEWS
+    from NEWS  limit #{page},10
+  </select>
+
+
+  <select id="selectNewCount" resultType="Total">
+    select count(*) as total from NEWS
   </select>
 
 
